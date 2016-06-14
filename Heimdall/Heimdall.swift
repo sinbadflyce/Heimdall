@@ -72,6 +72,34 @@ public class Heimdall {
     }
     
     ///
+    /// Create an instance with importing the private and public keys
+    ///
+    public convenience init?(tagPrefix: String, publicKeyData: NSData?, privateData: NSData?) {
+        let publicTag = tagPrefix
+        let privateTag = tagPrefix + ".private"
+        
+        if let existingPublicData = Heimdall.obtainKeyData(publicTag), existingPrivateData = Heimdall.obtainKeyData(privateTag) {
+            if let newData = publicKeyData?.dataByStrippingX509Header() where !existingPublicData.isEqualToData(newData) {
+                Heimdall.updateKey(publicTag, data: newData)
+            }
+            if let newData = privateData where !existingPrivateData.isEqualToData(newData) {
+                Heimdall.updateKey(privateTag, data: newData)
+            }
+            self.init(scope: ScopeOptions.All, publicTag: publicTag, privateTag: privateTag)
+        } else {
+            let pubData = publicKeyData?.dataByStrippingX509Header()
+            guard let _ = Heimdall.insertKey(publicTag, keyData: pubData!, isPublic: true) else {
+                return nil
+            }
+            let prvData = privateData
+            guard let _ = Heimdall.insertKey(privateTag, keyData: prvData!, isPublic: false) else {
+                return nil
+            }
+            self.init(scope: ScopeOptions.All, publicTag: publicTag, privateTag: privateTag)
+        }        
+    }
+    
+    ///
     /// Create an instance with the modulus and exponent of the public key
     /// the resulting key is added to the keychain (call .destroy() to remove)
     ///
@@ -636,6 +664,33 @@ public class Heimdall {
         }
         
         return Heimdall.obtainKey(publicTag)
+    }
+    
+    private class func insertKey(tag: String, keyData: NSData, isPublic: Bool) -> SecKeyRef? {
+        
+        var keyData = keyData
+        
+        
+        // Add persistent version of the key to system keychain
+        let persistKey = UnsafeMutablePointer<AnyObject?>()
+        let keyClass   = isPublic ? kSecAttrKeyClassPublic : kSecAttrKeyClassPrivate
+        
+        // Add persistent version of the key to system keychain
+        let keyDict = NSMutableDictionary()
+        keyDict.setObject(kSecClassKey,         forKey: kSecClass as! NSCopying)
+        keyDict.setObject(tag,                  forKey: kSecAttrApplicationTag as! NSCopying)
+        keyDict.setObject(kSecAttrKeyTypeRSA,   forKey: kSecAttrKeyType as! NSCopying)
+        keyDict.setObject(keyData,              forKey: kSecValueData as! NSCopying)
+        keyDict.setObject(keyClass,             forKey: kSecAttrKeyClass as! NSCopying)
+        keyDict.setObject(NSNumber(bool: true), forKey: kSecReturnPersistentRef as! NSCopying)
+        keyDict.setObject(kSecAttrAccessibleWhenUnlocked, forKey: kSecAttrAccessible as! NSCopying)
+        
+        var secStatus = SecItemAdd(keyDict as CFDictionary, persistKey)
+        if secStatus != noErr && secStatus != errSecDuplicateItem {
+            return nil
+        }
+        
+        return Heimdall.obtainKey(tag)
     }
     
     
