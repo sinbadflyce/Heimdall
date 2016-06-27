@@ -18,8 +18,7 @@ Pod::Spec.new do |s|
   s.author              = { "Henri Normak" => "henri.normak@gmail.com" }
   s.social_media_url    = "http://twitter.com/henrinormak"
 
-  s.ios.deployment_target = '8.0'
-  s.osx.deployment_target = '10.10'
+  s.platforms   = { :ios => "8.0", :osx => "10.10", :tvos => "9.0" }
 
   s.source       = { :git => "https://github.com/henrinormak/Heimdall.git", :tag => s.version.to_s }
 
@@ -31,19 +30,19 @@ Pod::Spec.new do |s|
                         'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/iphoneos/',
                         'SWIFT_INCLUDE_PATHS[sdk=appletvos*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/appletvos/',
                         'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/appletvsimulator/',
-                        'SWIFT_INCLUDE_PATHS[sdk=osx]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/osx/' }
+                        'SWIFT_INCLUDE_PATHS[sdk=macosx*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/macosx/' }
 
   s.prepare_command = <<-CMD
                         mkdir -p CommonCrypto/iphoneos
                         mkdir -p CommonCrypto/iphonesimulator
                         mkdir -p CommonCrypto/appletvos
                         mkdir -p CommonCrypto/appletvsimulator
-                        mkdir -p CommonCrypto/osx
+                        mkdir -p CommonCrypto/macosx
                         cp CommonCrypto/iphoneos.modulemap CommonCrypto/iphoneos/module.modulemap
-                        cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/osx/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/iphonesimulator/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/appletvos/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/appletvsimulator/module.modulemap
+                        cp CommonCrypto/macosx.modulemap CommonCrypto/macosx/module.modulemap
                         CMD
 
 end
