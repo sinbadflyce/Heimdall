@@ -18,8 +18,8 @@ Pod::Spec.new do |s|
   s.author              = { "Henri Normak" => "henri.normak@gmail.com" }
   s.social_media_url    = "http://twitter.com/henrinormak"
 
-  s.ios.platform     = :ios, "8.0"
-  s.osx.platform     = :osx, "10.10"
+  s.ios.deployment_target = '8.0'
+  s.osx.deployment_target = '10.10'
 
   s.source       = { :git => "https://github.com/henrinormak/Heimdall.git", :tag => s.version.to_s }
 
@@ -30,14 +30,17 @@ Pod::Spec.new do |s|
   s.xcconfig        = { 'SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/iphonesimulator/',
                         'SWIFT_INCLUDE_PATHS[sdk=iphoneos*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/iphoneos/',
                         'SWIFT_INCLUDE_PATHS[sdk=appletvos*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/appletvos/',
-                        'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/appletvsimulator/' }
+                        'SWIFT_INCLUDE_PATHS[sdk=appletvsimulator*]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/appletvsimulator/',
+                        'SWIFT_INCLUDE_PATHS[sdk=osx]' => '$(PODS_ROOT)/Heimdall/CommonCrypto/osx/' }
 
   s.prepare_command = <<-CMD
                         mkdir -p CommonCrypto/iphoneos
                         mkdir -p CommonCrypto/iphonesimulator
                         mkdir -p CommonCrypto/appletvos
                         mkdir -p CommonCrypto/appletvsimulator
+                        mkdir -p CommonCrypto/osx
                         cp CommonCrypto/iphoneos.modulemap CommonCrypto/iphoneos/module.modulemap
+                        cp CommonCrypto/osx.modulemap CommonCrypto/osx/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/iphonesimulator/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/appletvos/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/appletvsimulator/module.modulemap
