@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.social_media_url    = "http://twitter.com/henrinormak"
 
   s.ios.platform     = :ios, "8.0"
-  s.osx.platform     = :osx, “10.10”
+  s.osx.platform     = :osx, "10.10"
 
   s.source       = { :git => "https://github.com/henrinormak/Heimdall.git", :tag => s.version.to_s }
 
