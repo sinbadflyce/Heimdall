@@ -40,7 +40,7 @@ Pod::Spec.new do |s|
                         mkdir -p CommonCrypto/appletvsimulator
                         mkdir -p CommonCrypto/osx
                         cp CommonCrypto/iphoneos.modulemap CommonCrypto/iphoneos/module.modulemap
-                        cp CommonCrypto/osx.modulemap CommonCrypto/osx/module.modulemap
+                        cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/osx/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/iphonesimulator/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/appletvos/module.modulemap
                         cp CommonCrypto/iphonesimulator.modulemap CommonCrypto/appletvsimulator/module.modulemap
